@@ -14,12 +14,23 @@ The used transforms is GPT-2
 * Transformer optimization
 * Context optimization
 
+## How to use
+Docker ready code
+
+```
+>> mv <src_folder>
+>> docker build -t yourcompanyname/deeptwitchchatbot .
+>> docker run yourcompanyname/deeptwitchchatbot
+```
+
+This may take a while
+
 ## Responses
 Model: gpt2-medium
 
 ```
 User: Hola
-Bot: Hola @User
+Bot: Hola
 User: Te gusta el chocolate?
 Bot: No, ahora soy alergico al chocolate
 User: Cuentame de ti
