@@ -4,13 +4,13 @@ This is a twitch chatbot made with Twitchio for the twitch connection and Transf
 The used transforms is GPT-2 
 
 ## Features
-* Links
-* Personality
+* Links and commands
+* Chatbot personality
 * Translation to spanish
 * Random periodic messages
 
 ## TODO
-* Subscription, followers(, etc) support
+* Subscription, followers support
 * Transformer optimization
 * Context optimization
 
@@ -29,4 +29,4 @@ Bot: Quiero convertirme en un robot
 ```
 
 ## Licence 
-This repository uses [Twitchio](https://github.com/TwitchIO/TwitchIO) and [Hugginface](https://github.com/huggingface/transformers)
+This repository uses [Twitchio](https://github.com/TwitchIO/TwitchIO) and [Hugginface](https://github.com/huggingface/transformers) everything else is under MIT license
