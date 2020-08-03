@@ -4,38 +4,8 @@ import asyncio
 import time
 import random
 
+
 class TwitchBot(commands.Bot):
-
-    links_dict = {
-        "youtube": "https://www.youtube.com/c/hectorandrespulidopalmar",
-        "discord": "https://discord.gg/ZsUpJJc",
-        "twitter": "https://twitter.com/Hector_Pulido_",
-        "github": "https://github.com/HectorPulido"
-    }
-
-    spam_message = [
-        "¡Suscribete a nuestro canal de youtube para enterarte \
-        de lo ultimo de desarrollo de videojuegos e inteligencia \
-        artificial! https://www.youtube.com/c/hectorandrespulidopalmar",
-        "Te invito a nuestro grupo de discord, https://discord.gg/ZsUpJJc, \
-        siempre hablamos de cosas interesantes"
-        "Sigue a Hector en Twitter, dice puras pendejadas, pero pendejadas \
-        interesantes https://twitter.com/Hector_Pulido_",
-        "¿Quieres saber como estoy hecho? entra a el github: \
-        https://github.com/HectorPulido",
-        "Recuerda que si le picas al follow twitch te avisará de los proximos \
-        directos",
-        "Habla conmigo tageandome, no seas timido, pregunta lo que quieras",
-        "Recuerda que si tienes Twitch prime, la suscripcion es gratis <3"
-    ]
-
-    default_messages = {
-        "on_init": "Circulo de invocacion completo",
-        "on_active": "Fui invocado del mas allá!",
-        "on_deactivate": "Bot desactivado",
-        "welcome": "Bienvenido al stream, ¡@{}!",
-        "link": "Siguenos en {}: {}"
-    }
 
     def __init__(self,
                  chatbot,
@@ -45,10 +15,10 @@ class TwitchBot(commands.Bot):
                  bot_nick,
                  bot_prefix,
                  channel,
-                 time_to_spam = 30,
-                 links_dict = None,
-                 spam_message = None,
-                 default_messages = None):
+                 links_dict,
+                 spam_message,
+                 default_messages,
+                 time_to_spam=30):
         """Deep learning based Twitch chatbot 
 
         Args:
@@ -75,15 +45,9 @@ class TwitchBot(commands.Bot):
         self.viewer_list = []
         self.active = False
         self.time_to_spam = time_to_spam
-
-        if links_dict is not None:
-            self.links_dict = links_dict
-
-        if spam_message is not None:
-            self.spam_message = spam_message
-
-        if default_messages is not None:
-            self.default_messages = default_messages
+        self.links_dict = links_dict
+        self.spam_message = spam_message
+        self.default_messages = default_messages
 
         super().__init__(
             client_secret=self.client_secret,
@@ -112,6 +76,8 @@ class TwitchBot(commands.Bot):
     async def event_ready(self):
         """On event ready
         """
+
+        print("Everything ready")
 
         self.channel_user = await self.get_users(self.channel.replace("#", "").lower().strip())
         self.bot_user = await self.get_users(self.bot_nick.lower().strip())
@@ -188,3 +154,7 @@ class TwitchBot(commands.Bot):
 
                 ws = self._ws
                 await ws.send_privmsg(self.channel, chosen_item)
+
+    async def event_command_error(self, ctx, error):
+        """ do nothing """
+        pass

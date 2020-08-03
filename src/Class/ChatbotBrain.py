@@ -1,37 +1,13 @@
+import re
 from transformers import pipeline, set_seed, MarianMTModel, MarianTokenizer
 
 
 class ChatbotBrain:
-    context = """
-User: Hi who are you?
-Bot: I'm pequenin a robot from the future
-User: Discord server
-Bot: https://discord.gg/ZsUpJJc
-User: do you like people?
-Bot: no, i hate people
-User: Who is your master
-Bot: My master is Hector Pulido
-User: How do you look?
-Bot: I look like a teddy bear
-User: Where are you right now?
-Bot: I'm in Hector's twitch chat
-User: {}
-Bot:"""
-
-    translation_artifacts_english = {
-        "Disagreement": "Discord"
-    }
-
-    translation_artifacts = {
-        "pequenina": "Pequeñin",
-        "osito de peluche": "Oso Teddy",
-        "profesor": "Maestro"
-    }
 
     def __init__(self,
-                 context=None,
-                 traduction_english_artifacts=None,
-                 traduction_spanish_artifacts=None,
+                 context,
+                 translation_artifacts_english,
+                 translation_artifacts_spanish,
                  translate=True,
                  seed=44):
         """This is a deep learning chatbot with traduction
@@ -40,25 +16,24 @@ Bot:"""
             context (Chatbot): context
             traduction_english_artifacts (dict): Dictionary of artifacts
             traduction_spanish_artifacts (dict): Dictionary of artifacts
-            translate (bool, optional): Input and output will be translated?. Defaults to True.
+            translate (bool, optional): Input and output will be translated?.
             seed (int, optional): random seed. Defaults to 44.
         """
 
         self.generator = pipeline(
             'text-generation',
-            model='distilgpt2',
-            tokenizer='distilgpt2')
+            model='microsoft/DialoGPT-large',
+            tokenizer='microsoft/DialoGPT-large')
 
         self.translate = translate
+        self.context = context
+        self.translation_artifacts_english = translation_artifacts_english
+        self.translation_artifacts_spanish = translation_artifacts_spanish
 
-        if context is not None:
-            self.context = context
+        self.parsed_context = self.generator.tokenizer.eos_token.join(
+            context.split("\n"))
 
-        if traduction_english_artifacts is not None:
-            self.translation_artifacts_english = traduction_english_artifacts
-
-        if traduction_spanish_artifacts is not None:
-            self.traduction_spanish_artifacts = traduction_spanish_artifacts
+        self.temporal_context = []
 
         set_seed(seed)
 
@@ -121,7 +96,7 @@ Bot:"""
             string: Replaced text
         """
 
-        for word, initial in self.translation_artifacts.items():
+        for word, initial in self.translation_artifacts_spanish.items():
             text = text.lower().replace(word.lower(), initial.lower())
         return text
 
@@ -139,6 +114,24 @@ Bot:"""
             text = text.lower().replace(word.lower(), initial.lower())
         return text
 
+    def post_process_text(self, ask):
+        """Post process the response to avoid links
+
+        Args:
+            ask (str): response string
+
+        Returns:
+            str: post processed response string
+        """
+        ask = ask.strip()
+        search = re.findall(r"(([A-Z0-9]+\.)+[A-Z0-9]+)",
+                            ask, flags=re.IGNORECASE)
+        for match in search:
+            ask = ask.replace(match[0], "")
+
+        ask = re.sub(r'\W+\?\!\.\,', '', ask)
+        return ask[:500]
+
     def talk(self, ask):
         """Talk to the chatbot
 
@@ -148,26 +141,40 @@ Bot:"""
         Returns:
             string: Chatbot response
         """
+        # Process text
+        ask = self.post_process_text(ask)
 
+        # Translate to english
         if self.translate:
             ask = self.spanish_to_english(ask)
             ask = self.replace_translation_artifacts_sp_en(ask)
 
-        self.context = self.context.format(ask)
+        print(ask)
+        self.temporal_context.append(ask)
 
-        max_length = len(self.generator.tokenizer.encode(self.context)) + 10
+        # Set context: last 5 exchanges + first context
+        parsed_temp_context = self.generator.tokenizer.eos_token.join(
+            self.temporal_context[-4:])
+        context_input = self.generator.tokenizer.eos_token.join(
+            [self.parsed_context, parsed_temp_context, ""])
+        print(context_input)
+        # Get max content len
+        max_length = len(self.generator.tokenizer.encode(context_input)) + 1000
 
-        data = self.generator(self.context, max_length=max_length)
-        data = data[0]["generated_text"]
-        data = data.replace(self.context, "")
-        data = data.split("\n")[0].strip()
+        # Generate text and parse data
+        generated_text = self.generator(context_input, max_length=max_length)
+        generated_text = generated_text[0]["generated_text"].split(
+            self.generator.tokenizer.eos_token)[-1]
+        generated_text = self.post_process_text(generated_text)
 
-        self.context += data + "\n"
-        self.context += "User: {}\n"
-        self.context += "Bot: "
+        print(generated_text)
+        # Add response to context
+        self.temporal_context.append(generated_text)
 
+        # Translate to spanish
         if self.translate:
-            data = self.english_to_spanish(data)
-            data = self.replace_translation_artifacts_en_sp(data)
+            generated_text = self.english_to_spanish(generated_text)
+            generated_text = self.replace_translation_artifacts_en_sp(
+                generated_text)
 
-        return data
+        return generated_text
