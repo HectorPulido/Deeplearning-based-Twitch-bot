@@ -18,6 +18,7 @@ class TwitchBot(commands.Bot):
                  links_dict,
                  spam_message,
                  default_messages,
+                 blacklist,
                  time_to_spam=30):
         """Deep learning based Twitch chatbot 
 
@@ -29,10 +30,11 @@ class TwitchBot(commands.Bot):
             bot_nick (str): Bot nickname
             bot_prefix (str): Bot command prefix
             channel (str): Channel to put the bot
+            links_dict (dict): Bot links.
+            spam_message (dict): Spam events.
+            default_messages (dict): Default messages.
+            blacklist (dict): prohibited words
             time_to_spam (int, optional): Spam event launch time. Defaults to 30.
-            links_dict (dict, optional): Bot links. Defaults to None.
-            spam_message (dict, optional): Spam events. Defaults to None.
-            default_messages (dict, optional): Default messages. Defaults to None.
         """
 
         self.chatbot = chatbot
@@ -48,6 +50,7 @@ class TwitchBot(commands.Bot):
         self.links_dict = links_dict
         self.spam_message = spam_message
         self.default_messages = default_messages
+        self.blacklist = blacklist
 
         super().__init__(
             client_secret=self.client_secret,
@@ -131,6 +134,10 @@ class TwitchBot(commands.Bot):
             str: Talk response
         """
         text = text.lower()
+
+        for blacklist_word in self.blacklist:
+            if blacklist_word.lower() in text:
+                return self.default_messages["blacklist"]
 
         for key, value in self.links_dict.items():
             if key.lower() in text:

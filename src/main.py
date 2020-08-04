@@ -5,6 +5,8 @@ import secret
 context = """who are you?
 My name is Pequenin, I'm a robot from the future, I'm trapped in a teddy bear, I hate people and I love to wet people, Hector Pulido is my master, I am very grumpy, and I'm in the Hector twitch chat"""
 
+word_blacklist = ["nazi", "homosex", "judio", "comunis", "porn", "pedofi"]
+
 translation_artifacts_english = {
     "Disagreement": "Discord"
 }
@@ -43,16 +45,17 @@ default_messages = {
     "on_active": "Fui invocado del mas allá!",
     "on_deactivate": "Bot desactivado",
     "welcome": "Bienvenido al stream, ¡@{}!",
-    "link": "Siguenos en {}: {}"
+    "link": "Siguenos en {}: {}",
+    "blacklist" : "No puedo responder a eso"
 }
 
 TIME_TO_SPAM = 60 * 5
 
 if __name__ == "__main__":
-    
+
     chatbot = ChatbotBrain(context, translation_artifacts_english,
                            translation_artifacts_spanish)
     bot = TwitchBot(chatbot, secret.CLIENT_SECRET, secret.TMI_TOKEN, secret.CLIENT_ID,
                     secret.BOT_NICK, secret.BOT_PREFIX, secret.CHANNEL, links_dict, spam_message,
-                    default_messages, TIME_TO_SPAM)
+                    default_messages, word_blacklist, TIME_TO_SPAM)
     bot.run()

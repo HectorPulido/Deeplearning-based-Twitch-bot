@@ -6,6 +6,7 @@ This is a twitch chatbot made with Twitchio for the twitch connection and Transf
 * Chatbot personality
 * Translation to spanish
 * Random periodic messages
+* Blacklist
 
 ## TODO
 * Subscription, followers support
