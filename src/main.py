@@ -27,7 +27,7 @@ spam_message = [
     de lo ultimo de desarrollo de videojuegos e inteligencia \
     artificial! https://www.youtube.com/c/hectorandrespulidopalmar",
     "Te invito a nuestro grupo de discord, https://discord.gg/ZsUpJJc, \
-    siempre hablamos de cosas interesantes"
+    siempre hablamos de cosas interesantes",
     "Sigue a Hector en Twitter, dice puras pendejadas, pero pendejadas \
     interesantes https://twitter.com/Hector_Pulido_",
     "¿Quieres saber como estoy hecho? entra a el github: \
@@ -46,10 +46,13 @@ default_messages = {
     "link": "Siguenos en {}: {}"
 }
 
+TIME_TO_SPAM = 60 * 5
+
 if __name__ == "__main__":
-    chatbot = ChatbotBrain(
-        context, translation_artifacts_english, translation_artifacts_spanish)
+    
+    chatbot = ChatbotBrain(context, translation_artifacts_english,
+                           translation_artifacts_spanish)
     bot = TwitchBot(chatbot, secret.CLIENT_SECRET, secret.TMI_TOKEN, secret.CLIENT_ID,
                     secret.BOT_NICK, secret.BOT_PREFIX, secret.CHANNEL, links_dict, spam_message,
-                    default_messages, 120)
+                    default_messages, TIME_TO_SPAM)
     bot.run()

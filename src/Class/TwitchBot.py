@@ -78,7 +78,6 @@ class TwitchBot(commands.Bot):
         """
 
         print("Everything ready")
-
         self.channel_user = await self.get_users(self.channel.replace("#", "").lower().strip())
         self.bot_user = await self.get_users(self.bot_nick.lower().strip())
 
@@ -115,7 +114,7 @@ class TwitchBot(commands.Bot):
 
         if message.author.name not in self.viewer_list:
             self.viewer_list.append(message.author.name)
-            await message.channel.send(self.default_messages["on_init"].format(message.author.name))
+            await message.channel.send(self.default_messages["welcome"].format(message.author.name))
 
         if f"@{self.bot_nick}" in message.content + " EOL":
             message_replaced = message.content.replace(f"@{self.bot_nick}", "")
@@ -131,10 +130,11 @@ class TwitchBot(commands.Bot):
         Returns:
             str: Talk response
         """
+        text = text.lower()
 
         for key, value in self.links_dict.items():
-            if key in text:
-                return self.default_messages["on_init"].format(key, value)
+            if key.lower() in text:
+                return self.default_messages["link"].format(key, value)
 
         return self.chatbot.talk(text)
 

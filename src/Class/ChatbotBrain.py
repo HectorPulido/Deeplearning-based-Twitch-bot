@@ -8,6 +8,8 @@ class ChatbotBrain:
                  context,
                  translation_artifacts_english,
                  translation_artifacts_spanish,
+                 model="microsoft/DialoGPT-large",
+                 tokenizer="microsoft/DialoGPT-large",
                  translate=True,
                  seed=44):
         """This is a deep learning chatbot with traduction
@@ -22,8 +24,8 @@ class ChatbotBrain:
 
         self.generator = pipeline(
             'text-generation',
-            model='microsoft/DialoGPT-large',
-            tokenizer='microsoft/DialoGPT-large')
+            model=model,
+            tokenizer=tokenizer)
 
         self.translate = translate
         self.context = context
@@ -149,7 +151,6 @@ class ChatbotBrain:
             ask = self.spanish_to_english(ask)
             ask = self.replace_translation_artifacts_sp_en(ask)
 
-        print(ask)
         self.temporal_context.append(ask)
 
         # Set context: last 5 exchanges + first context
@@ -157,7 +158,7 @@ class ChatbotBrain:
             self.temporal_context[-4:])
         context_input = self.generator.tokenizer.eos_token.join(
             [self.parsed_context, parsed_temp_context, ""])
-        print(context_input)
+
         # Get max content len
         max_length = len(self.generator.tokenizer.encode(context_input)) + 1000
 
@@ -167,7 +168,6 @@ class ChatbotBrain:
             self.generator.tokenizer.eos_token)[-1]
         generated_text = self.post_process_text(generated_text)
 
-        print(generated_text)
         # Add response to context
         self.temporal_context.append(generated_text)
 
