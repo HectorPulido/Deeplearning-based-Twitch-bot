@@ -20,7 +20,7 @@ class TwitchBot(commands.Bot):
                  default_messages,
                  blacklist,
                  time_to_spam=30):
-        """Deep learning based Twitch chatbot 
+        """Deep learning based Twitch chatbot
 
         Args:
             chatbot (ChatbotBrain): Chatbot deep learning core
@@ -34,6 +34,7 @@ class TwitchBot(commands.Bot):
             spam_message (dict): Spam events.
             default_messages (dict): Default messages.
             blacklist (dict): prohibited words
+            custom_events (dict): Events
             time_to_spam (int, optional): Spam event launch time. Defaults to 30.
         """
 
@@ -61,21 +62,6 @@ class TwitchBot(commands.Bot):
             initial_channels=[self.channel]
         )
 
-    async def set_active(self, active):
-        """Toggle bot active
-
-        Args:
-            active (bool): if the bot is not active, it'll no talk
-        """
-
-        self.active = active
-
-        ws = self._ws
-        if active:
-            await ws.send_privmsg(self.channel, self.default_messages["on_active"])
-        else:
-            await ws.send_privmsg(self.channel, self.default_messages["on_deactivate"])
-
     async def event_ready(self):
         """On event ready
         """
@@ -90,23 +76,13 @@ class TwitchBot(commands.Bot):
         # run spam loop
         await self.spam_messages(self.time_to_spam)
 
-        ws = self._ws  # this is only needed to send messages within event_ready
-        await ws.send_privmsg(self.channel, self.default_messages["on_init"])
-
     async def event_message(self, message):
         """Runs every time a message is sent in chat.
 
         Args:
             message (context): Message object containing relevant information.
         """
-
-        await self.handle_commands(message)
-
-        if message.author.name.lower() in self.channel.lower():
-            if "deactivatebot" in message.content + " EOL":
-                await self.set_active(False)
-            elif "activatebot" in message.content + " EOL":
-                await self.set_active(True)
+        await self.set_active(message)
 
         if not self.active:
             return
@@ -115,35 +91,56 @@ class TwitchBot(commands.Bot):
         if message.author.name.lower() == self.bot_nick.lower():
             return
 
-        if message.author.name not in self.viewer_list:
-            self.viewer_list.append(message.author.name)
-            await message.channel.send(self.default_messages["welcome"].format(message.author.name))
+        await self.welcome_message(message)
+        await self.bit_message(message)
+        await self.talk_to_bot(message)
+        await self.handle_commands(message)
 
-        if f"@{self.bot_nick}" in message.content + " EOL":
-            message_replaced = message.content.replace(f"@{self.bot_nick}", "")
-            response = self.process_response(message_replaced)
-            await message.channel.send(f"{response}, @{message.author.name}")
+    async def bit_message(self, message):
+        bits = message.tags.get("bits", None)
 
-    def process_response(self, text):
-        """Process the text of the command
+        if bits == None:
+            return
+
+        response = self.default_messages["on_bits"] \
+            .format(message.author.name, bits)
+        print(response)
+        # await message.channel.send(response)
+
+    async def welcome_message(self, message):
+        if message.author.name.lower() in self.viewer_list:
+            return
+
+        self.viewer_list.append(message.author.name.lower())
+
+        response = self.default_messages["welcome"] \
+            .format(message.author.name)
+        await message.channel.send(response)
+
+    async def talk_to_bot(self, message):
+        if f"@{self.bot_nick.lower()}" not in message.content.lower() + " EOL":
+            return
+
+        message_replaced = message.content.replace(f"@{self.bot_nick}", "")
+        response = self.process_response(message_replaced)
+        await message.channel.send(f"{response} @{message.author.name}")
+
+    async def set_active(self, message):
+        """Toggle bot active
 
         Args:
-            text (str): Command text
-
-        Returns:
-            str: Talk response
+            active (bool): if the bot is not active, it'll no talk
         """
-        text = text.lower()
 
-        for blacklist_word in self.blacklist:
-            if blacklist_word.lower() in text:
-                return self.default_messages["blacklist"]
+        if message.author.name.lower() not in self.channel.lower():
+            return
 
-        for key, value in self.links_dict.items():
-            if key.lower() in text:
-                return self.default_messages["link"].format(key, value)
-
-        return self.chatbot.talk(text)
+        if "deactivatebot" in message.content + " EOL":
+            self.active = False
+            await message.channel.send(self.default_messages["on_deactivate"])
+        elif "activatebot" in message.content + " EOL":
+            self.active = True
+            await message.channel.send(self.default_messages["on_active"])
 
     async def spam_messages(self, time_to_spam):
         """Repetitive messages
@@ -162,6 +159,47 @@ class TwitchBot(commands.Bot):
                 ws = self._ws
                 await ws.send_privmsg(self.channel, chosen_item)
 
-    async def event_command_error(self, ctx, error):
-        """ do nothing """
+    async def event_raw_usernotice(self, channel, tags):
+        """Responds to subs, resubs, raids and gifted subs"""
+
+        if not self.active:
+            return
+
+        ws = self._ws
+        if tags["msg-id"] == "sub":
+            message = self.default_messages["on_sub"].format(
+                tags["display-name"])
+            await ws.send_privmsg(self.channel, message)
+
+        if tags["msg-id"] == "resub":
+            message = self.default_messages["on_resub"].format(
+                tags["display-name"],
+                tags["msg-param-cumulative-months"]
+            )
+            await ws.send_privmsg(self.channel, message)
+
+    async def event_command_error(self, ctx, e):
+        """ignore errors"""
         pass
+
+    def process_response(self, text):
+        """Process the text of the command
+
+        Args:
+            text (str): Command text
+
+        Returns:
+            str: Talk response
+        """
+
+        text = text.lower()
+
+        for blacklist_word in self.blacklist:
+            if blacklist_word.lower() in text:
+                return self.default_messages["blacklist"]
+
+        for key, value in self.links_dict.items():
+            if key.lower() in text:
+                return self.default_messages["link"].format(key, value)
+
+        return self.chatbot.talk(text)

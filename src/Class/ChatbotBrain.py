@@ -153,9 +153,9 @@ class ChatbotBrain:
 
         self.temporal_context.append(ask)
 
-        # Set context: last 5 exchanges + first context
+        # Set context: last 2 exchanges + first context
         parsed_temp_context = self.generator.tokenizer.eos_token.join(
-            self.temporal_context[-4:])
+            self.temporal_context[-3:])
         context_input = self.generator.tokenizer.eos_token.join(
             [self.parsed_context, parsed_temp_context, ""])
 

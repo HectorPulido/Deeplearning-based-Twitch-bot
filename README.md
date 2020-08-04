@@ -7,11 +7,13 @@ This is a twitch chatbot made with Twitchio for the twitch connection and Transf
 * Translation to spanish
 * Random periodic messages
 * Blacklist
+* Subscription and bits message
 
 ## TODO
-* Subscription, followers support
+* Followers support
 * Transformer optimization
 * Context optimization
+* Custom function
 
 ## How to use
 1. Configure the file secret.py like this

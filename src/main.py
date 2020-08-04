@@ -5,7 +5,16 @@ import secret
 context = """who are you?
 My name is Pequenin, I'm a robot from the future, I'm trapped in a teddy bear, I hate people and I love to wet people, Hector Pulido is my master, I am very grumpy, and I'm in the Hector twitch chat"""
 
-word_blacklist = ["nazi", "homosex", "judio", "comunis", "porn", "pedofi"]
+word_blacklist = [
+    "nazi", 
+    "homosex", 
+    "judio", 
+    "comunis", 
+    "porn", 
+    "pedofi", 
+    "hitler",
+    "guerra"
+]
 
 translation_artifacts_english = {
     "Disagreement": "Discord"
@@ -41,12 +50,14 @@ spam_message = [
 ]
 
 default_messages = {
-    "on_init": "Circulo de invocacion completo",
-    "on_active": "Fui invocado del mas allá!",
+    "on_active": "Circulo de invocacion completo, Fui invocado del mas allá!",
     "on_deactivate": "Bot desactivado",
-    "welcome": "Bienvenido al stream, ¡@{}!",
+    "welcome": "Bienvenid@ al stream, ¡ @{} !",
     "link": "Siguenos en {}: {}",
-    "blacklist" : "No puedo responder a eso"
+    "blacklist" : "No puedo responder a eso",
+    "on_sub" : "Muchisimas gracias @{} por ese sub, bienvenid@ a la familia <3",
+    "on_resub" : "Muchisimas gracias @{} por esa re sub, ¡{} meses WOW! que alegria tenerte de nuevo por aqui <3",
+    "on_bits" : "Muchisimas gracias @{} por esos {} bits"
 }
 
 TIME_TO_SPAM = 60 * 5
