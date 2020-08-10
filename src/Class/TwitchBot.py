@@ -19,6 +19,8 @@ class TwitchBot(commands.Bot):
                  spam_message,
                  default_messages,
                  blacklist,
+                 custom_events,
+                 custom_commands,
                  time_to_spam=30):
         """Deep learning based Twitch chatbot
 
@@ -35,8 +37,11 @@ class TwitchBot(commands.Bot):
             default_messages (dict): Default messages.
             blacklist (dict): prohibited words
             custom_events (dict): Events
+            custom_commands (dict): commands
             time_to_spam (int, optional): Spam event launch time. Defaults to 30.
         """
+        self.viewer_list = []
+        self.active = False
 
         self.chatbot = chatbot
         self.client_secret = client_secret
@@ -45,13 +50,14 @@ class TwitchBot(commands.Bot):
         self.bot_nick = bot_nick
         self.bot_prefix = bot_prefix
         self.channel = channel
-        self.viewer_list = []
-        self.active = False
         self.time_to_spam = time_to_spam
         self.links_dict = links_dict
         self.spam_message = spam_message
         self.default_messages = default_messages
         self.blacklist = blacklist
+
+        self.custom_events = custom_events
+        self.custom_commands = custom_commands
 
         super().__init__(
             client_secret=self.client_secret,
@@ -91,31 +97,12 @@ class TwitchBot(commands.Bot):
         if message.author.name.lower() == self.bot_nick.lower():
             return
 
-        await self.welcome_message(message)
-        await self.bit_message(message)
+        for event in self.custom_events:
+            await event(message, self)
+
+        await self.handle_custom_commands(message)
+
         await self.talk_to_bot(message)
-        await self.handle_commands(message)
-
-    async def bit_message(self, message):
-        bits = message.tags.get("bits", None)
-
-        if bits == None:
-            return
-
-        response = self.default_messages["on_bits"] \
-            .format(message.author.name, bits)
-        print(response)
-        # await message.channel.send(response)
-
-    async def welcome_message(self, message):
-        if message.author.name.lower() in self.viewer_list:
-            return
-
-        self.viewer_list.append(message.author.name.lower())
-
-        response = self.default_messages["welcome"] \
-            .format(message.author.name)
-        await message.channel.send(response)
 
     async def talk_to_bot(self, message):
         if f"@{self.bot_nick.lower()}" not in message.content.lower() + " EOL":
@@ -153,11 +140,8 @@ class TwitchBot(commands.Bot):
             await asyncio.sleep(time_to_spam)
 
             if self.active:
-                chosen_item = self.spam_message[random.randint(
-                    0, len(self.spam_message) - 1)]
-
-                ws = self._ws
-                await ws.send_privmsg(self.channel, chosen_item)
+                chosen_item = random.choice(self.spam_message)
+                await self._ws.send_privmsg(self.channel, chosen_item)
 
     async def event_raw_usernotice(self, channel, tags):
         """Responds to subs, resubs, raids and gifted subs"""
@@ -165,22 +149,32 @@ class TwitchBot(commands.Bot):
         if not self.active:
             return
 
-        ws = self._ws
         if tags["msg-id"] == "sub":
             message = self.default_messages["on_sub"].format(
                 tags["display-name"])
-            await ws.send_privmsg(self.channel, message)
 
         if tags["msg-id"] == "resub":
             message = self.default_messages["on_resub"].format(
                 tags["display-name"],
                 tags["msg-param-cumulative-months"]
             )
-            await ws.send_privmsg(self.channel, message)
+
+        if tags["msg-id"] == "raid":
+            message = self.default_messages["on_raid"].format(
+                tags["display-name"]
+            )
+            
+        await self._ws.send_privmsg(self.channel, message)
 
     async def event_command_error(self, ctx, e):
         """ignore errors"""
         pass
+
+    async def handle_custom_commands(self, message):
+        text = message.content.lower()
+        for key, command in self.custom_commands.items():
+            if text.startswith(self.bot_prefix + key.lower()):
+                await command(message, self)
 
     def process_response(self, text):
         """Process the text of the command

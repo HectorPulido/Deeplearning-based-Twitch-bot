@@ -1,19 +1,24 @@
 from Class.ChatbotBrain import ChatbotBrain
 from Class.TwitchBot import TwitchBot
+from CustomEvents.bit_message import bit_message
+from CustomEvents.duel import duel
+from CustomEvents.welcome import welcome
+from CustomEvents.wet import wet
 import secret
 
 context = """who are you?
 My name is Pequenin, I'm a robot from the future, I'm trapped in a teddy bear, I hate people and I love to wet people, Hector Pulido is my master, I am very grumpy, and I'm in the Hector twitch chat"""
 
 word_blacklist = [
-    "nazi", 
-    "homosex", 
-    "judio", 
-    "comunis", 
-    "porn", 
-    "pedofi", 
+    "nazi",
+    "homosex",
+    "judio",
+    "comunis",
+    "porn",
+    "pedofi",
     "hitler",
-    "guerra"
+    "guerra",
+    "antisem"
 ]
 
 translation_artifacts_english = {
@@ -47,26 +52,38 @@ spam_message = [
     directos",
     "Habla conmigo tageandome, no seas timido, pregunta lo que quieras",
     "Recuerda que si tienes Twitch prime, la suscripcion es gratis <3"
+    # "No te olvides de seguir a nuestros amigos de aventuras en carreta https://twitter.com/avent_carreta",
+    # "No te olvides de seguir a @cadstor_val https://twitter.com/Val_Castor_",
+    # "No te olvides de seguir a el jeñor puni (y echarle awa) https://twitter.com/puni_xa",
+    # "No te olvides de seguir a la master Mey https://twitter.com/Zaix64713153",
 ]
 
 default_messages = {
     "on_active": "Circulo de invocacion completo, Fui invocado del mas allá!",
     "on_deactivate": "Bot desactivado",
-    "welcome": "Bienvenid@ al stream, ¡ @{} !",
     "link": "Siguenos en {}: {}",
-    "blacklist" : "No puedo responder a eso",
-    "on_sub" : "Muchisimas gracias @{} por ese sub, bienvenid@ a la familia <3",
-    "on_resub" : "Muchisimas gracias @{} por esa re sub, ¡{} meses WOW! que alegria tenerte de nuevo por aqui <3",
-    "on_bits" : "Muchisimas gracias @{} por esos {} bits"
+    "blacklist": "No puedo responder a eso",
+    "on_sub": "Muchisimas gracias @{} por ese sub, bienvenid@ a la familia <3",
+    "on_resub": "Muchisimas gracias @{} por esa re sub, ¡{} meses WOW! que \
+        alegria tenerte de nuevo por aqui <3",
+    "on_raid": "Muchas gracias por ese raid @{}, bienvenidos todos <3"
 }
 
-TIME_TO_SPAM = 60 * 5
+custom_events = [bit_message, welcome]
+custom_commands = {
+    "duelo": duel,
+    "mojar" : wet
+}
+
+TIME_TO_SPAM = 60 * 10
 
 if __name__ == "__main__":
 
     chatbot = ChatbotBrain(context, translation_artifacts_english,
-                           translation_artifacts_spanish)
+                           translation_artifacts_spanish, "microsoft/DialoGPT-large",
+                           "microsoft/DialoGPT-large")
+
     bot = TwitchBot(chatbot, secret.CLIENT_SECRET, secret.TMI_TOKEN, secret.CLIENT_ID,
                     secret.BOT_NICK, secret.BOT_PREFIX, secret.CHANNEL, links_dict, spam_message,
-                    default_messages, word_blacklist, TIME_TO_SPAM)
+                    default_messages, word_blacklist, custom_events, custom_commands, TIME_TO_SPAM)
     bot.run()

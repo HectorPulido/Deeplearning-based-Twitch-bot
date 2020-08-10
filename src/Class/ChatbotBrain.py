@@ -8,8 +8,8 @@ class ChatbotBrain:
                  context,
                  translation_artifacts_english,
                  translation_artifacts_spanish,
-                 model="microsoft/DialoGPT-large",
-                 tokenizer="microsoft/DialoGPT-large",
+                 model="microsoft/DialoGPT-small",
+                 tokenizer="microsoft/DialoGPT-small",
                  translate=True,
                  seed=44):
         """This is a deep learning chatbot with traduction
