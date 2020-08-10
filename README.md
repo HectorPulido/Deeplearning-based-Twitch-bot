@@ -6,14 +6,15 @@ This is a twitch chatbot made with Twitchio for the twitch connection and Transf
 * Chatbot personality
 * Translation to spanish
 * Random periodic messages
-* Blacklist
+* Word Blacklist
 * Subscription and bits message
+* Custom functions
 
 ## TODO
 * Followers support
 * Transformer optimization
 * Context optimization
-* Custom function
+* Emotes with sentiment analysis
 
 ## How to use
 1. Configure the file secret.py like this
