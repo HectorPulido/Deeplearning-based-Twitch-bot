@@ -4,6 +4,7 @@ from CustomEvents.bit_message import bit_message
 from CustomEvents.duel import duel
 from CustomEvents.welcome import welcome
 from CustomEvents.wet import wet
+from CustomEvents.pick_random_user import pick_random_user
 import secret
 
 context = """who are you?
@@ -72,7 +73,8 @@ default_messages = {
 custom_events = [bit_message, welcome]
 custom_commands = {
     "duelo": duel,
-    "mojar" : wet
+    "mojar" : wet,
+    "pickoneuser" : pick_random_user
 }
 
 TIME_TO_SPAM = 60 * 10
