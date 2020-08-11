@@ -1,6 +1,6 @@
 import random
 
-on_wet = "@{} ha mojado a @{}"
+on_wet = "@{} le ha echado awa a @{}"
 
 async def wet(message, bot):
     text = message.content.strip().split(" ")

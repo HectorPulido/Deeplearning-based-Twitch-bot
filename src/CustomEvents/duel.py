@@ -13,7 +13,7 @@ duel_response = [
     "Ya sin esperanza todos sabiamos que {loser} iba a morir... teniamos razon",
     "{loser} lanzó una roca y le cayó a el mismo",
     "{loser} saco a su Charizard nivel 100, pero esta mierda no es digimon, \
-        el poder de la amistad no existe, y este se lo comio vivo",
+        el poder de la amistad no existe, asi que este se lo comio vivo",
     "a {loser} lo atropelló un tren antes de llegar al lugar de encuentro",
     "{loser} se ahogo con sus propias palabras",
     "{loser} esta confundido, perdedor se ha golpeado a si mismo multiples \
@@ -23,7 +23,7 @@ duel_response = [
 no_duelist_message = "No has elegido contrincante, asi que tu enemigo será @{}"
 self_duelist_message = "No puedes competir contra ti mismo"
 no_existing_user_message = "El combatiente @{} no existe en este chat"
-duel_start_message = "Empieza la pelea entre @{duelist_1} y @{duelist_1}"
+duel_start_message = "Empieza la pelea entre @{duelist_1} y @{duelist_2}"
 
 
 async def duel(message, bot):

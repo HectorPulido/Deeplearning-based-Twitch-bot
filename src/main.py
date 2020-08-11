@@ -80,8 +80,10 @@ TIME_TO_SPAM = 60 * 10
 if __name__ == "__main__":
 
     chatbot = ChatbotBrain(context, translation_artifacts_english,
-                           translation_artifacts_spanish, "microsoft/DialoGPT-large",
-                           "microsoft/DialoGPT-large")
+                          translation_artifacts_spanish, "microsoft/DialoGPT-large",
+                         "microsoft/DialoGPT-large")
+    # from Class.TestChatbotBrain import TestChatbotBrain
+    # chatbot = TestChatbotBrain()
 
     bot = TwitchBot(chatbot, secret.CLIENT_SECRET, secret.TMI_TOKEN, secret.CLIENT_ID,
                     secret.BOT_NICK, secret.BOT_PREFIX, secret.CHANNEL, links_dict, spam_message,
