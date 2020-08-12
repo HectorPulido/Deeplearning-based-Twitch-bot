@@ -9,12 +9,12 @@ This is a twitch chatbot made with Twitchio for the twitch connection and Transf
 * Word Blacklist
 * Subscription and bits message
 * Custom functions
+* Emotes with sentiment analysis
 
 ## TODO
 * Followers support
 * Transformer optimization
 * Context optimization
-* Emotes with sentiment analysis
 
 ## How to use
 1. Configure the file secret.py like this
