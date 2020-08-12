@@ -1,6 +1,6 @@
 import re
 from transformers import pipeline, set_seed, MarianMTModel, MarianTokenizer
-
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 class ChatbotBrain:
 
@@ -11,6 +11,7 @@ class ChatbotBrain:
                  model="microsoft/DialoGPT-small",
                  tokenizer="microsoft/DialoGPT-small",
                  translate=True,
+                 sentiment_analisis = False,
                  seed=44):
         """This is a deep learning chatbot with traduction
 
@@ -20,6 +21,7 @@ class ChatbotBrain:
             traduction_spanish_artifacts (dict): Dictionary of artifacts
             translate (bool, optional): Input and output will be translated?.
             seed (int, optional): random seed. Defaults to 44.
+            sentiment_analisis (bool, optional): 
         """
 
         self.generator = pipeline(
@@ -31,6 +33,7 @@ class ChatbotBrain:
         self.context = context
         self.translation_artifacts_english = translation_artifacts_english
         self.translation_artifacts_spanish = translation_artifacts_spanish
+        self.sentiment_analisis = sentiment_analisis
 
         self.parsed_context = self.generator.tokenizer.eos_token.join(
             context.split("\n"))
@@ -38,6 +41,9 @@ class ChatbotBrain:
         self.temporal_context = []
 
         set_seed(seed)
+
+        if sentiment_analisis:
+            self.sentiment_engine = SentimentIntensityAnalyzer()
 
         if translate:
             # ENG -> SPANISH
@@ -134,6 +140,17 @@ class ChatbotBrain:
         ask = re.sub(r'\W+\?\!\.\,', '', ask)
         return ask[:500]
 
+    def get_sentiment(self, text):
+        """
+
+        Args:
+            text (text): 
+
+        Returns:
+            float: sentiment
+        """
+        return self.sentiment_engine.polarity_scores(text)["compound"]
+
     def talk(self, ask):
         """Talk to the chatbot
 
@@ -142,7 +159,8 @@ class ChatbotBrain:
 
         Returns:
             string: Chatbot response
-        """
+            float: Response sentiment
+        """        
         # Process text
         ask = self.post_process_text(ask)
 
@@ -168,6 +186,10 @@ class ChatbotBrain:
             self.generator.tokenizer.eos_token)[-1]
         generated_text = self.post_process_text(generated_text)
 
+        # Sentiment
+        if self.sentiment_analisis:
+            sentiment = self.get_sentiment(generated_text)
+
         # Add response to context
         self.temporal_context.append(generated_text)
 
@@ -176,5 +198,8 @@ class ChatbotBrain:
             generated_text = self.english_to_spanish(generated_text)
             generated_text = self.replace_translation_artifacts_en_sp(
                 generated_text)
+
+        if self.sentiment_analisis:
+            return generated_text, sentiment
 
         return generated_text

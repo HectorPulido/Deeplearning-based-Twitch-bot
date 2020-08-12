@@ -1,3 +1,4 @@
 transformers
 twitchio
 torch
+vaderSentiment
