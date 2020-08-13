@@ -10,6 +10,7 @@ This is a twitch chatbot made with Twitchio for the twitch connection and Transf
 * Subscription and bits message
 * Custom functions
 * Emotes with sentiment analysis
+* Text to speech
 
 ## TODO
 * Followers support
@@ -67,6 +68,36 @@ User: Hablame de ti
 Bot: me gusta el helado.
 User: ¿como te llamas?
 Bot: soy un robot del futuro, estoy atrapado en un oso teddy, odio a la gente y amo a la gente mojada, héctor pulido es mi maestro, soy muy gruñón, y yo
+```
+
+## Emotes 🆕
+
+Using Vader sentiment analysis tool the chatbot is capable to response with emotes in the chat
+```
+User: Te gusta el agua?
+Bot: Me gustà el agua TakeNRG
+```
+
+## Text to speech 🆕
+
+Using the library pyttsx3 the bot is capable of read some messages from the chat, read it's own responses or thanks when a sub event is trigger 
+```
+User: !decir Esto se va a decir
+<voice>
+User: !decir deactivatetts
+<no voice>
+User: !decir Esto no se va a decir
+<no voice>
+User: !decir activatetts
+<voice>
+User: !decir Esto tambien se va a decir
+<voice>
+```
+
+If something is wrong the streamer can toggle the voice generator with the commands
+```
+User: !decir deactivatetts
+User: !decir activatetts
 ```
 
 ## More interesting projects
