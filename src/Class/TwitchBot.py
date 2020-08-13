@@ -18,7 +18,8 @@ class TwitchBot(commands.Bot):
                  default_messages,
                  custom_events,
                  custom_commands,
-                 time_to_spam=30):
+                 time_to_spam=30,
+                 text_to_speech=None):
         """Deep learning based Twitch chatbot
 
         Args:
@@ -33,6 +34,7 @@ class TwitchBot(commands.Bot):
             custom_events (dict): Events
             custom_commands (dict): commands
             time_to_spam (int, optional): Spam event launch time. Defaults to 30.
+            text_to_speech (object, optional): .
         """
         self.viewer_list = []
         self.active = False
@@ -46,6 +48,7 @@ class TwitchBot(commands.Bot):
         self.time_to_spam = time_to_spam
         self.spam_message = spam_message
         self.default_messages = default_messages
+        self.text_to_speech = text_to_speech
 
         self.custom_events = custom_events
         self.custom_commands = custom_commands
@@ -128,8 +131,6 @@ class TwitchBot(commands.Bot):
     async def event_raw_usernotice(self, channel, tags):
         """Responds to subs, resubs, raids and gifted subs"""
 
-        print(dict(tags))
-
         if not self.active:
             return
 
@@ -153,6 +154,9 @@ class TwitchBot(commands.Bot):
             message = self.default_messages["on_subgift"].format(
                 tags["display-name"]
             )
+
+        if self.text_to_speech is not None:
+            self.text_to_speech.say(message)
 
         await self._ws.send_privmsg(self.channel, message)
 

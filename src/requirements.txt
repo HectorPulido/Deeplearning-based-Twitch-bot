@@ -1,4 +1,5 @@
+torch
 transformers
 twitchio
-torch
 vaderSentiment
+pyttsx3

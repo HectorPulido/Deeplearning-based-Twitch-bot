@@ -1,11 +1,12 @@
 import random
 
 class TalkToChatbot:
-    def __init__(self, chatbot, blacklist, blacklist_message, emotes = None):
+    def __init__(self, chatbot, blacklist, blacklist_message, emotes = None, tts = None):
         self.chatbot = chatbot
         self.blacklist = blacklist
         self.blacklist_message = blacklist_message
         self.emotes = emotes
+        self.tts = tts
 
     async def __call__(self, message, bot):
         if f"@{bot.bot_nick.lower()}" not in message.content.lower() + " EOL":
@@ -23,14 +24,18 @@ class TalkToChatbot:
             text, sentiment = response
             response = text + " " + self.get_emote(sentiment)
 
+        if self.tts is not None:
+            self.tts.say(response + " " + message.author.name)
+
         await message.channel.send(f"{response} @{message.author.name}")
 
     def get_emote(self, sentiment):
-        emote = ""
         if sentiment > 0.2:
             emote = random.choice(self.emotes["positive"])
         elif sentiment < -0.2:
             emote = random.choice(self.emotes["negative"])
+        else:
+            emote = random.choice(self.emotes["neutral"])
 
         return emote
 

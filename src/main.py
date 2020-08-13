@@ -1,12 +1,14 @@
 from Class.ChatbotBrain import ChatbotBrain
+#from Class.TestChatbotBrain import TestChatbotBrain
 from Class.TwitchBot import TwitchBot
-from CustomEvents.bit_message import bit_message
 from CustomEvents.duel import duel
 from CustomEvents.welcome import welcome
 from CustomEvents.wet import wet
 from CustomEvents.pick_random_user import pick_random_user
 from CustomEvents.links import links
+from CustomEvents.BitMessage import BitMessage
 from CustomEvents.TalkToChatbot import TalkToChatbot
+from CustomEvents.TextToSpeech import TextToSpeech
 import secret
 
 context = """who are you?
@@ -27,8 +29,10 @@ chatbot = ChatbotBrain(context, translation_artifacts_english,
                        translation_artifacts_spanish, "microsoft/DialoGPT-large",
                        "microsoft/DialoGPT-large", True, True)
 
-#from Class.TestChatbotBrain import TestChatbotBrain
-#chatbot = TestChatbotBrain()
+template_text_to_speech = "{} Dice {}"
+text_to_speech = TextToSpeech(template_text_to_speech)
+
+# chatbot = TestChatbotBrain()
 
 word_blacklist = [
     "nazi",
@@ -43,16 +47,22 @@ word_blacklist = [
 ]
 blacklist_message = "No puedo responder a eso"
 emotes = {
-    "positive": ["❤", "😂", "😁", "😋", "TakeNRG", "VoHiYo"],
-    "negative": ["😣", "😥", "🙁", "😰", "WutFace", "TheThing"]
+    "positive": ["❤", "😂", "😁", "😋", "TakeNRG", "VoHiYo", "BloodTrail", "TehePelo"],
+    "negative": ["😣", "😥", "🙁", "😰", "WutFace", "TheThing", "NotLikeThis", "BibleThump"],
+    "neutral" : ["", "", "", "PowerUpL DxCat PowerUpR", "Squid1 Squid3 Squid2 Squid4 "]
 }
-talk_to_chatbot = TalkToChatbot(chatbot, word_blacklist, blacklist_message, emotes)
+talk_to_chatbot = TalkToChatbot(
+    chatbot, word_blacklist, blacklist_message, emotes, text_to_speech)
+
+on_bits = "Muchisimas gracias @{} por esos {} bits"
+bit_message = BitMessage(on_bits, text_to_speech)
 
 custom_events = [bit_message, welcome, links, talk_to_chatbot]
 custom_commands = {
     "duelo": duel,
     "mojar": wet,
-    "pickoneuser": pick_random_user
+    "pickoneuser": pick_random_user,
+    "decir": text_to_speech
 }
 
 spam_message = [
@@ -87,7 +97,7 @@ default_messages = {
 TIME_TO_SPAM = 60 * 10
 bot = TwitchBot(secret.CLIENT_SECRET, secret.TMI_TOKEN, secret.CLIENT_ID,
                 secret.BOT_NICK, secret.BOT_PREFIX, secret.CHANNEL, spam_message,
-                default_messages, custom_events, custom_commands, TIME_TO_SPAM)
+                default_messages, custom_events, custom_commands, TIME_TO_SPAM, text_to_speech)
 
 
 if __name__ == "__main__":
