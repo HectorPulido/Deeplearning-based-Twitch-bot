@@ -1,5 +1,6 @@
 from Class.ChatbotBrain import ChatbotBrain
-#from Class.TestChatbotBrain import TestChatbotBrain
+
+# from Class.TestChatbotBrain import TestChatbotBrain
 from Class.TwitchBot import TwitchBot
 from CustomEvents.duel import duel
 from CustomEvents.welcome import welcome
@@ -16,18 +17,22 @@ My name is Pequenin, I'm a robot from the future, I'm trapped \
 in a teddy bear, I hate people and I love to wet people, Hector \
 Pulido is my master, I am very grumpy, and I'm in the Hector twitch chat"""
 
-translation_artifacts_english = {
-    "Disagreement": "Discord"
-}
+translation_artifacts_english = {"Disagreement": "Discord"}
 
 translation_artifacts_spanish = {
     "pequenina": "Pequeñin",
     "osito de peluche": "Oso Teddy",
-    "profesor": "Maestro"
+    "profesor": "Maestro",
 }
-chatbot = ChatbotBrain(context, translation_artifacts_english,
-                       translation_artifacts_spanish, "microsoft/DialoGPT-large",
-                       "microsoft/DialoGPT-large", True, True)
+chatbot = ChatbotBrain(
+    context,
+    translation_artifacts_english,
+    translation_artifacts_spanish,
+    "microsoft/DialoGPT-large",
+    "microsoft/DialoGPT-large",
+    True,
+    True,
+)
 
 template_text_to_speech = "{} Dice {}"
 text_to_speech = TextToSpeech(template_text_to_speech)
@@ -43,16 +48,26 @@ word_blacklist = [
     "pedofi",
     "hitler",
     "guerra",
-    "antisem"
+    "antisem",
 ]
 blacklist_message = "No puedo responder a eso"
 emotes = {
     "positive": ["❤", "😂", "😁", "😋", "TakeNRG", "VoHiYo", "BloodTrail", "TehePelo"],
-    "negative": ["😣", "😥", "🙁", "😰", "WutFace", "TheThing", "NotLikeThis", "BibleThump"],
-    "neutral" : ["", "", "", "PowerUpL DxCat PowerUpR", "Squid1 Squid3 Squid2 Squid4 "]
+    "negative": [
+        "😣",
+        "😥",
+        "🙁",
+        "😰",
+        "WutFace",
+        "TheThing",
+        "NotLikeThis",
+        "BibleThump",
+    ],
+    "neutral": ["", "", "", "PowerUpL DxCat PowerUpR", "Squid1 Squid3 Squid2 Squid4 "],
 }
 talk_to_chatbot = TalkToChatbot(
-    chatbot, word_blacklist, blacklist_message, emotes, text_to_speech)
+    chatbot, word_blacklist, blacklist_message, emotes, text_to_speech
+)
 
 on_bits = "Muchisimas gracias @{} por esos {} bits"
 bit_message = BitMessage(on_bits, text_to_speech)
@@ -62,7 +77,7 @@ custom_commands = {
     "duelo": duel,
     "mojar": wet,
     "pickoneuser": pick_random_user,
-    "decir": text_to_speech
+    "decir": text_to_speech,
 }
 
 spam_message = [
@@ -92,12 +107,23 @@ default_messages = {
     "on_resub": "Muchisimas gracias @{} por esa re sub, ¡{} meses WOW! que \
         alegria tenerte de nuevo por aqui <3",
     "on_raid": "Muchas gracias por ese raid @{}, bienvenidos todos <3",
-    "on_subgift": "Muchisimas gracias @{} por regalar esas subs <3"
+    "on_subgift": "Muchisimas gracias @{} por regalar esas subs <3",
 }
 TIME_TO_SPAM = 60 * 10
-bot = TwitchBot(secret.CLIENT_SECRET, secret.TMI_TOKEN, secret.CLIENT_ID,
-                secret.BOT_NICK, secret.BOT_PREFIX, secret.CHANNEL, spam_message,
-                default_messages, custom_events, custom_commands, TIME_TO_SPAM, text_to_speech)
+bot = TwitchBot(
+    secret.CLIENT_SECRET,
+    secret.TMI_TOKEN,
+    secret.CLIENT_ID,
+    secret.BOT_NICK,
+    secret.BOT_PREFIX,
+    secret.CHANNEL,
+    spam_message,
+    default_messages,
+    custom_events,
+    custom_commands,
+    TIME_TO_SPAM,
+    text_to_speech,
+)
 
 
 if __name__ == "__main__":

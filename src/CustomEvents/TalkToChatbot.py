@@ -1,7 +1,8 @@
 import random
 
+
 class TalkToChatbot:
-    def __init__(self, chatbot, blacklist, blacklist_message, emotes = None, tts = None):
+    def __init__(self, chatbot, blacklist, blacklist_message, emotes=None, tts=None):
         self.chatbot = chatbot
         self.blacklist = blacklist
         self.blacklist_message = blacklist_message
@@ -12,14 +13,13 @@ class TalkToChatbot:
         if f"@{bot.bot_nick.lower()}" not in message.content.lower() + " EOL":
             return
 
-        message_replaced = message.content\
-            .replace(f"@{bot.bot_nick}", "").lower()
+        message_replaced = message.content.replace(f"@{bot.bot_nick}", "").lower()
 
         if self.check_blacklist(message_replaced):
             return await message.channel.send(self.blacklist_message)
 
         response = self.process_response(message_replaced)
-        
+
         if self.emotes is not None and type(response) is tuple:
             text, sentiment = response
             response = text + " " + self.get_emote(sentiment)

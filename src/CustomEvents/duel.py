@@ -17,7 +17,7 @@ duel_response = [
     "a {loser} lo atropelló un tren antes de llegar al lugar de encuentro",
     "{loser} se ahogo con sus propias palabras",
     "{loser} esta confundido, perdedor se ha golpeado a si mismo multiples \
-        veces hasta morir... pero murio de herpes"
+        veces hasta morir... pero murio de herpes",
 ]
 
 no_duelist_message = "No has elegido contrincante, asi que tu enemigo será @{}"
@@ -41,18 +41,17 @@ async def duel(message, bot):
         return await message.channel.send(self_duelist_message)
 
     if duelist_2.lower() not in bot.viewer_list:
-        return await message.channel.send(
-            no_existing_user_message.format(duelist_2))
+        return await message.channel.send(no_existing_user_message.format(duelist_2))
 
-    await message.channel.send(duel_start_message.format(
-        duelist_1=duelist_1, duelist_2=duelist_2))
+    await message.channel.send(
+        duel_start_message.format(duelist_1=duelist_1, duelist_2=duelist_2)
+    )
 
     loser, winner = duelist_1, duelist_2
 
     if random.random() > 0.5:
         winner, loser = duelist_1, duelist_2
 
-    duel_message = random.choice(duel_response).format(
-        loser=loser, winner=winner)
+    duel_message = random.choice(duel_response).format(loser=loser, winner=winner)
 
     await message.channel.send(duel_message)

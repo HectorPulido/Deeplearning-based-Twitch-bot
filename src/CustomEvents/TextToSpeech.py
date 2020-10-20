@@ -11,7 +11,7 @@ class TextToSpeech:
     async def __call__(self, message, bot):
 
         text = message.content
-        text = text.split(' ', 1)[1]
+        text = text.split(" ", 1)[1]
         author = message.author.name
 
         self.check_activate(text, author, bot)
@@ -21,7 +21,7 @@ class TextToSpeech:
     def say(self, text):
         if not self.tts_active:
             return
-            
+
         self.engine.say(text)
         self.engine.runAndWait()
 

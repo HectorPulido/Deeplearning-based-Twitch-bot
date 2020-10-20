@@ -6,20 +6,21 @@ import random
 
 
 class TwitchBot(commands.Bot):
-
-    def __init__(self,
-                 client_secret,
-                 tmi_token,
-                 client_id,
-                 bot_nick,
-                 bot_prefix,
-                 channel,
-                 spam_message,
-                 default_messages,
-                 custom_events,
-                 custom_commands,
-                 time_to_spam=30,
-                 text_to_speech=None):
+    def __init__(
+        self,
+        client_secret,
+        tmi_token,
+        client_id,
+        bot_nick,
+        bot_prefix,
+        channel,
+        spam_message,
+        default_messages,
+        custom_events,
+        custom_commands,
+        time_to_spam=30,
+        text_to_speech=None,
+    ):
         """Deep learning based Twitch chatbot
 
         Args:
@@ -59,15 +60,16 @@ class TwitchBot(commands.Bot):
             client_id=self.client_id,
             nick=self.bot_nick,
             prefix=self.bot_prefix,
-            initial_channels=[self.channel]
+            initial_channels=[self.channel],
         )
 
     async def event_ready(self):
-        """On event ready
-        """
+        """On event ready"""
 
         print("Everything ready")
-        self.channel_user = await self.get_users(self.channel.replace("#", "").lower().strip())
+        self.channel_user = await self.get_users(
+            self.channel.replace("#", "").lower().strip()
+        )
         self.bot_user = await self.get_users(self.bot_nick.lower().strip())
 
         self.channel_user = self.channel_user[0]
@@ -135,25 +137,18 @@ class TwitchBot(commands.Bot):
             return
 
         if tags["msg-id"] == "sub":
-            message = self.default_messages["on_sub"].format(
-                tags["display-name"]
-            )
+            message = self.default_messages["on_sub"].format(tags["display-name"])
 
         if tags["msg-id"] == "resub":
             message = self.default_messages["on_resub"].format(
-                tags["display-name"],
-                tags["msg-param-cumulative-months"]
+                tags["display-name"], tags["msg-param-cumulative-months"]
             )
 
         if tags["msg-id"] == "raid":
-            message = self.default_messages["on_raid"].format(
-                tags["display-name"]
-            )
+            message = self.default_messages["on_raid"].format(tags["display-name"])
 
         if tags["msg-id"] == "subgift":
-            message = self.default_messages["on_subgift"].format(
-                tags["display-name"]
-            )
+            message = self.default_messages["on_subgift"].format(tags["display-name"])
 
         if self.text_to_speech is not None:
             self.text_to_speech.say(message)

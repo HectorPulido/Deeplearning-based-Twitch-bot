@@ -2,17 +2,19 @@ import re
 from transformers import pipeline, set_seed, MarianMTModel, MarianTokenizer
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
-class ChatbotBrain:
 
-    def __init__(self,
-                 context,
-                 translation_artifacts_english,
-                 translation_artifacts_spanish,
-                 model="microsoft/DialoGPT-small",
-                 tokenizer="microsoft/DialoGPT-small",
-                 translate=True,
-                 sentiment_analisis = False,
-                 seed=44):
+class ChatbotBrain:
+    def __init__(
+        self,
+        context,
+        translation_artifacts_english,
+        translation_artifacts_spanish,
+        model="microsoft/DialoGPT-small",
+        tokenizer="microsoft/DialoGPT-small",
+        translate=True,
+        sentiment_analisis=False,
+        seed=44,
+    ):
         """This is a deep learning chatbot with traduction
 
         Args:
@@ -21,13 +23,10 @@ class ChatbotBrain:
             traduction_spanish_artifacts (dict): Dictionary of artifacts
             translate (bool, optional): Input and output will be translated?.
             seed (int, optional): random seed. Defaults to 44.
-            sentiment_analisis (bool, optional): 
+            sentiment_analisis (bool, optional):
         """
 
-        self.generator = pipeline(
-            'text-generation',
-            model=model,
-            tokenizer=tokenizer)
+        self.generator = pipeline("text-generation", model=model, tokenizer=tokenizer)
 
         self.translate = translate
         self.context = context
@@ -36,7 +35,8 @@ class ChatbotBrain:
         self.sentiment_analisis = sentiment_analisis
 
         self.parsed_context = self.generator.tokenizer.eos_token.join(
-            context.split("\n"))
+            context.split("\n")
+        )
 
         self.temporal_context = []
 
@@ -47,18 +47,18 @@ class ChatbotBrain:
 
         if translate:
             # ENG -> SPANISH
-            self.model_name_en_t_es = 'Helsinki-NLP/opus-mt-en-ROMANCE'
+            self.model_name_en_t_es = "Helsinki-NLP/opus-mt-en-ROMANCE"
             self.tokenizer_en_t_es = MarianTokenizer.from_pretrained(
-                self.model_name_en_t_es)
-            self.model_en_t_es = MarianMTModel.from_pretrained(
-                self.model_name_en_t_es)
+                self.model_name_en_t_es
+            )
+            self.model_en_t_es = MarianMTModel.from_pretrained(self.model_name_en_t_es)
 
             # ESP -> ENGLISH
-            self.model_name_es_t_en = 'Helsinki-NLP/opus-mt-ROMANCE-en'
+            self.model_name_es_t_en = "Helsinki-NLP/opus-mt-ROMANCE-en"
             self.tokenizer_es_t_en = MarianTokenizer.from_pretrained(
-                self.model_name_es_t_en)
-            self.model_es_t_en = MarianMTModel.from_pretrained(
-                self.model_name_es_t_en)
+                self.model_name_es_t_en
+            )
+            self.model_es_t_en = MarianMTModel.from_pretrained(self.model_name_es_t_en)
 
     def english_to_spanish(self, text):
         """English to spanish translation
@@ -70,11 +70,14 @@ class ChatbotBrain:
             string: Translated text
         """
 
-        src_text = ['>>es<< {}'.format(text)]
+        src_text = [">>es<< {}".format(text)]
         translated = self.model_en_t_es.generate(
-            **self.tokenizer_en_t_es.prepare_translation_batch(src_text))
-        tgt_text = [self.tokenizer_en_t_es.decode(
-            t, skip_special_tokens=True) for t in translated]
+            **self.tokenizer_en_t_es.prepare_seq2seq_batch(src_text)
+        )
+        tgt_text = [
+            self.tokenizer_en_t_es.decode(t, skip_special_tokens=True)
+            for t in translated
+        ]
         return tgt_text[0]
 
     def spanish_to_english(self, text):
@@ -89,9 +92,12 @@ class ChatbotBrain:
 
         src_text = [text]
         translated = self.model_es_t_en.generate(
-            **self.tokenizer_es_t_en.prepare_translation_batch(src_text))
-        tgt_text = [self.tokenizer_es_t_en.decode(
-            t, skip_special_tokens=True) for t in translated]
+            **self.tokenizer_es_t_en.prepare_seq2seq_batch(src_text)
+        )
+        tgt_text = [
+            self.tokenizer_es_t_en.decode(t, skip_special_tokens=True)
+            for t in translated
+        ]
         return tgt_text[0]
 
     def replace_translation_artifacts_en_sp(self, text):
@@ -132,19 +138,18 @@ class ChatbotBrain:
             str: post processed response string
         """
         ask = ask.strip()
-        search = re.findall(r"(([A-Z0-9]+\.)+[A-Z0-9]+)",
-                            ask, flags=re.IGNORECASE)
+        search = re.findall(r"(([A-Z0-9]+\.)+[A-Z0-9]+)", ask, flags=re.IGNORECASE)
         for match in search:
             ask = ask.replace(match[0], "")
 
-        ask = re.sub(r'\W+\?\!\.\,', '', ask)
+        ask = re.sub(r"\W+\?\!\.\,", "", ask)
         return ask[:500]
 
     def get_sentiment(self, text):
         """
 
         Args:
-            text (text): 
+            text (text):
 
         Returns:
             float: sentiment
@@ -160,7 +165,7 @@ class ChatbotBrain:
         Returns:
             string: Chatbot response
             float: Response sentiment
-        """        
+        """
         # Process text
         ask = self.post_process_text(ask)
 
@@ -173,9 +178,11 @@ class ChatbotBrain:
 
         # Set context: last 2 exchanges + first context
         parsed_temp_context = self.generator.tokenizer.eos_token.join(
-            self.temporal_context[-3:])
+            self.temporal_context[-3:]
+        )
         context_input = self.generator.tokenizer.eos_token.join(
-            [self.parsed_context, parsed_temp_context, ""])
+            [self.parsed_context, parsed_temp_context, ""]
+        )
 
         # Get max content len
         max_length = len(self.generator.tokenizer.encode(context_input)) + 1000
@@ -183,7 +190,8 @@ class ChatbotBrain:
         # Generate text and parse data
         generated_text = self.generator(context_input, max_length=max_length)
         generated_text = generated_text[0]["generated_text"].split(
-            self.generator.tokenizer.eos_token)[-1]
+            self.generator.tokenizer.eos_token
+        )[-1]
         generated_text = self.post_process_text(generated_text)
 
         # Sentiment
@@ -196,8 +204,7 @@ class ChatbotBrain:
         # Translate to spanish
         if self.translate:
             generated_text = self.english_to_spanish(generated_text)
-            generated_text = self.replace_translation_artifacts_en_sp(
-                generated_text)
+            generated_text = self.replace_translation_artifacts_en_sp(generated_text)
 
         if self.sentiment_analisis:
             return generated_text, sentiment

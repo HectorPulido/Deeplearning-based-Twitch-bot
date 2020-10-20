@@ -1,5 +1,5 @@
 class BitMessage:
-    def __init__(self, on_bits_message, tts = None):
+    def __init__(self, on_bits_message, tts=None):
         self.tts = tts
         self.on_bits_message = on_bits_message
 
@@ -13,5 +13,5 @@ class BitMessage:
 
         if self.tts is not None:
             self.tts.say(response)
-            
+
         await message.channel.send(response)
