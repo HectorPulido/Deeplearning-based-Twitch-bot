@@ -1,6 +1,6 @@
 from Class.ChatbotBrain import ChatbotBrain
 
-# from Class.TestChatbotBrain import TestChatbotBrain
+from Class.TestChatbotBrain import TestChatbotBrain
 from Class.TwitchBot import TwitchBot
 from CustomEvents.duel import duel
 from CustomEvents.welcome import welcome
@@ -65,19 +65,14 @@ emotes = {
     ],
     "neutral": ["", "", "", "PowerUpL DxCat PowerUpR", "Squid1 Squid3 Squid2 Squid4 "],
 }
-talk_to_chatbot = TalkToChatbot(
-    chatbot, word_blacklist, blacklist_message, emotes, text_to_speech
-)
+talk_to_chatbot = TalkToChatbot(chatbot, word_blacklist, blacklist_message, emotes)
 
 on_bits = "Muchisimas gracias @{} por esos {} bits"
 bit_message = BitMessage(on_bits, text_to_speech)
 
 custom_events = [bit_message, welcome, links, talk_to_chatbot]
 custom_commands = {
-    "duelo": duel,
-    "mojar": wet,
     "pickoneuser": pick_random_user,
-    "decir": text_to_speech,
 }
 
 spam_message = [
@@ -93,11 +88,7 @@ spam_message = [
     "Recuerda que si le picas al follow twitch te avisará de los proximos \
     directos",
     "Habla conmigo tageandome, no seas timido, pregunta lo que quieras",
-    "Recuerda que si tienes Twitch prime, la suscripcion es gratis <3"
-    # "No te olvides de seguir a nuestros amigos de aventuras en carreta https://twitter.com/avent_carreta",
-    # "No te olvides de seguir a @cadstor_val https://twitter.com/Val_Castor_",
-    # "No te olvides de seguir a el jeñor puni (y echarle awa) https://twitter.com/puni_xa",
-    # "No te olvides de seguir a la master Mey https://twitter.com/Zaix64713153",
+    "Recuerda que si tienes Twitch prime, la suscripcion es gratis <3",
 ]
 
 default_messages = {
@@ -109,6 +100,15 @@ default_messages = {
     "on_raid": "Muchas gracias por ese raid @{}, bienvenidos todos <3",
     "on_subgift": "Muchisimas gracias @{} por regalar esas subs <3",
 }
+
+custom_rewards = {
+    "e2665151-3aef-4add-8292-1223d27fb671": text_to_speech,
+    "a48e6dbc-bdd6-4492-b460-027642f48c02": wet,
+    "fbfa5734-9d04-482d-8d3d-177b4e574861": duel,
+    "fdfe4eae-bee4-48f2-ad6b-c8b0532d07e0": "@{name} quiere que tomes awa de uwu",
+    "48b7a08e-72ae-4bb3-b86c-f80396146338": "@{name} merece ser Vip!",
+}
+
 TIME_TO_SPAM = 60 * 10
 bot = TwitchBot(
     secret.CLIENT_SECRET,
@@ -121,6 +121,7 @@ bot = TwitchBot(
     default_messages,
     custom_events,
     custom_commands,
+    custom_rewards,
     TIME_TO_SPAM,
     text_to_speech,
 )

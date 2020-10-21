@@ -2,12 +2,11 @@ import random
 
 
 class TalkToChatbot:
-    def __init__(self, chatbot, blacklist, blacklist_message, emotes=None, tts=None):
+    def __init__(self, chatbot, blacklist, blacklist_message, emotes=None):
         self.chatbot = chatbot
         self.blacklist = blacklist
         self.blacklist_message = blacklist_message
         self.emotes = emotes
-        self.tts = tts
 
     async def __call__(self, message, bot):
         if f"@{bot.bot_nick.lower()}" not in message.content.lower() + " EOL":
@@ -23,9 +22,6 @@ class TalkToChatbot:
         if self.emotes is not None and type(response) is tuple:
             text, sentiment = response
             response = text + " " + self.get_emote(sentiment)
-
-        if self.tts is not None:
-            self.tts.say(response + " " + message.author.name)
 
         await message.channel.send(f"{response} @{message.author.name}")
 

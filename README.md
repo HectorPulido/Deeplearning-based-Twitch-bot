@@ -11,6 +11,7 @@ This is a twitch chatbot made with Twitchio for the twitch connection and Transf
 * Custom functions
 * Emotes with sentiment analysis
 * Text to speech
+* Custom rewards
 
 ## TODO
 * Followers support
@@ -80,25 +81,11 @@ Bot: Me gustà el agua TakeNRG
 
 ## Text to speech 🆕
 
-Using the library pyttsx3 the bot is capable of read some messages from the chat, read it's own responses or thanks when a sub event is trigger 
-```
-User: !decir Esto se va a decir
-<voice>
-User: !decir deactivatetts
-<no voice>
-User: !decir Esto no se va a decir
-<no voice>
-User: !decir activatetts
-<voice>
-User: !decir Esto tambien se va a decir
-<voice>
-```
+Using the library pyttsx3 the bot is capable of read some messages from the chat, read it's own responses or thanks when a sub event is trigger, it can also be activated by using the custom reward.
 
-If something is wrong the streamer can toggle the voice generator with the commands
-```
-User: !decir deactivatetts
-User: !decir activatetts
-```
+## Custom Rewards 🆕
+
+You can use the channel points to make awesome features, like use TTS or more commands, you can get your reward id in https://www.instafluff.tv/TwitchCustomRewardID/?channel=YOURTWITCHCHANNEL
 
 ## More interesting projects
 I have a lot of fun projects, check this:

@@ -27,16 +27,14 @@ duel_start_message = "Empieza la pelea entre @{duelist_1} y @{duelist_2}"
 
 
 async def duel(message, bot):
-    text = message.content.strip().split(" ")
-
     duelist_1 = message.author.name
+    duelist_2 = message.content.strip().split(" ")[0].replace("@", "")
 
-    if len(text) == 1:
+    if duelist_2.lower() not in bot.viewer_list:
         duelist_2 = random.choice(bot.viewer_list)
         await message.channel.send(no_duelist_message.format(duelist_2))
-    else:
-        duelist_2 = text[1].replace("@", "")
 
+    # you can not duel yourself
     if duelist_1.lower() == duelist_2.lower():
         return await message.channel.send(self_duelist_message)
 

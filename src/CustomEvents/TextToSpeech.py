@@ -11,11 +11,8 @@ class TextToSpeech:
     async def __call__(self, message, bot):
 
         text = message.content
-        text = text.split(" ", 1)[1]
         author = message.author.name
-
         self.check_activate(text, author, bot)
-
         self.say(self.template.format(author, text))
 
     def say(self, text):

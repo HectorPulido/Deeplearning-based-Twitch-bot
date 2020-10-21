@@ -18,6 +18,7 @@ class TwitchBot(commands.Bot):
         default_messages,
         custom_events,
         custom_commands,
+        custom_rewards,
         time_to_spam=30,
         text_to_speech=None,
     ):
@@ -34,6 +35,7 @@ class TwitchBot(commands.Bot):
             default_messages (dict): Default messages.
             custom_events (dict): Events
             custom_commands (dict): commands
+            custom_rewards (dict): rewards
             time_to_spam (int, optional): Spam event launch time. Defaults to 30.
             text_to_speech (object, optional): .
         """
@@ -51,6 +53,7 @@ class TwitchBot(commands.Bot):
         self.default_messages = default_messages
         self.text_to_speech = text_to_speech
 
+        self.custom_rewards = custom_rewards
         self.custom_events = custom_events
         self.custom_commands = custom_commands
 
@@ -94,9 +97,12 @@ class TwitchBot(commands.Bot):
         if message.author.name.lower() == self.bot_nick.lower():
             return
 
+        print(message.raw_data)
+
         for event in self.custom_events:
             await event(message, self)
 
+        await self.handle_custom_rewards(message)
         await self.handle_custom_commands(message)
 
     async def set_active(self, message):
@@ -162,6 +168,22 @@ class TwitchBot(commands.Bot):
                 if type(command) is str:
                     return await message.channel.send(command)
                 return await command(message, self)
+
+    async def handle_custom_rewards(self, message):
+        reward = message.tags.get("custom-reward-id", None)
+        if not reward:
+            return
+        if reward not in self.custom_rewards:
+            return
+
+        reward_function = self.custom_rewards[reward]
+
+        if type(reward_function) == str:
+            text = reward_function.format(name=message.author.name)
+            await self._ws.send_privmsg(self.channel, text)
+            return
+
+        await reward_function(message, self)
 
     async def event_command_error(self, ctx, e):
         """ignore errors"""
