@@ -107,9 +107,9 @@ I have a lot of fun projects, check this:
 - https://github.com/HectorPulido/Decentralized-Twitter-with-blockchain-as-base
 
 ### You also can follow me in social networks
-- Twitter: https://twitter.com/Hector_Pulido_
+- Twitter: [https://twitter.com/Hector_Pulido_](https://twitter.com/Hector_Pulido_)  
 - Youtube: http://youtube.com/c/hectorandrespulidopalmar
-- Twitch: https://www.twitch.tv/hector_pulido_
+- Twitch: [https://www.twitch.tv/hector_pulido_](https://www.twitch.tv/hector_pulido_)  
 
 ## Licence 
 This repository uses [Twitchio](https://github.com/TwitchIO/TwitchIO) and [Hugginface](https://github.com/huggingface/transformers) everything else is under MIT license
