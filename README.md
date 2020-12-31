@@ -1,5 +1,7 @@
 # Deep Learning based twitch chatbot
+
 This is a twitch chatbot made with Twitchio for the twitch connection and Transformers from Huggingface.
+[![youtube video](https://img.youtube.com/vi/PZ4x5BgTvZM/0.jpg)](https://www.youtube.com/watch?v=PZ4x5BgTvZM)
 
 ## Features
 * Links and commands
