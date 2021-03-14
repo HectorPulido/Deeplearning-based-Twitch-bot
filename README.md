@@ -93,15 +93,10 @@ You can use the channel points to make awesome features, like use TTS or more co
 I have a lot of fun projects, check this:
 
 ### Machine learning
+- https://github.com/HectorPulido/chatbot-with-voice
 - https://github.com/HectorPulido/Machine-learning-Framework-Csharp
 - https://github.com/HectorPulido/Evolutionary-Neural-Networks-on-unity-for-bots
 - https://github.com/HectorPulido/Imitation-learning-in-unity
-- https://github.com/HectorPulido/Chatbot-seq2seq-C-
-
-### Games
-- https://github.com/HectorPulido/Asteroids-like-game
-- https://github.com/HectorPulido/Contra-Like-game-made-with-unity
-- https://github.com/HectorPulido/Pacman-Online-made-with-unity
 
 ### Random
 - https://github.com/HectorPulido/Arithmetic-Parser-made-easy
