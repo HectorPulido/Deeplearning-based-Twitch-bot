@@ -73,6 +73,15 @@ bit_message = BitMessage(on_bits, text_to_speech)
 custom_events = [bit_message, welcome, links, talk_to_chatbot]
 custom_commands = {
     "pickoneuser": pick_random_user,
+    "discord": "Te invito a nuestro grupo de discord, https://discord.gg/ZsUpJJc, \
+    siempre hablamos de cosas interesantes y momazos",
+    "youtube": "¡Suscribete a nuestro canal de youtube para enterarte \
+    de lo ultimo de desarrollo de videojuegos e inteligencia \
+    artificial! https://www.youtube.com/c/hectorandrespulidopalmar",
+    "github": "¿Quieres saber como estoy hecho? entra a el github: \
+    https://github.com/HectorPulido",
+    "twitter": "Sigue a Hector en Twitter, dice puras pendejadas, pero pendejadas \
+    interesantes https://twitter.com/Hector_Pulido_",
 }
 
 spam_message = [
