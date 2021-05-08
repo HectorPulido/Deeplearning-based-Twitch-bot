@@ -72,7 +72,7 @@ class ChatbotBrain:
 
         src_text = [">>es<< {}".format(text)]
         translated = self.model_en_t_es.generate(
-            **self.tokenizer_en_t_es.prepare_seq2seq_batch(src_text)
+            **self.tokenizer_en_t_es.prepare_seq2seq_batch(src_text, return_tensors="pt", padding=True)
         )
         tgt_text = [
             self.tokenizer_en_t_es.decode(t, skip_special_tokens=True)
@@ -92,7 +92,7 @@ class ChatbotBrain:
 
         src_text = [text]
         translated = self.model_es_t_en.generate(
-            **self.tokenizer_es_t_en.prepare_seq2seq_batch(src_text)
+            **self.tokenizer_es_t_en.prepare_seq2seq_batch(src_text, return_tensors="pt", padding=True)
         )
         tgt_text = [
             self.tokenizer_es_t_en.decode(t, skip_special_tokens=True)
