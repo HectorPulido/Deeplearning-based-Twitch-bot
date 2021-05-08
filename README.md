@@ -1,5 +1,7 @@
 # Deep Learning based twitch chatbot
+
 This is a twitch chatbot made with Twitchio for the twitch connection and Transformers from Huggingface.
+[![youtube video](https://img.youtube.com/vi/PZ4x5BgTvZM/0.jpg)](https://www.youtube.com/watch?v=PZ4x5BgTvZM&list=PLHdk97dabfvzTZyKLb_spWHvI-qLArEzm&index=1)
 
 ## Features
 * Links and commands
@@ -91,15 +93,10 @@ You can use the channel points to make awesome features, like use TTS or more co
 I have a lot of fun projects, check this:
 
 ### Machine learning
+- https://github.com/HectorPulido/chatbot-with-voice
 - https://github.com/HectorPulido/Machine-learning-Framework-Csharp
 - https://github.com/HectorPulido/Evolutionary-Neural-Networks-on-unity-for-bots
 - https://github.com/HectorPulido/Imitation-learning-in-unity
-- https://github.com/HectorPulido/Chatbot-seq2seq-C-
-
-### Games
-- https://github.com/HectorPulido/Asteroids-like-game
-- https://github.com/HectorPulido/Contra-Like-game-made-with-unity
-- https://github.com/HectorPulido/Pacman-Online-made-with-unity
 
 ### Random
 - https://github.com/HectorPulido/Arithmetic-Parser-made-easy
@@ -107,9 +104,9 @@ I have a lot of fun projects, check this:
 - https://github.com/HectorPulido/Decentralized-Twitter-with-blockchain-as-base
 
 ### You also can follow me in social networks
-- Twitter: https://twitter.com/Hector_Pulido_
+- Twitter: [https://twitter.com/Hector_Pulido_](https://twitter.com/Hector_Pulido_)  
 - Youtube: http://youtube.com/c/hectorandrespulidopalmar
-- Twitch: https://www.twitch.tv/hector_pulido_
+- Twitch: [https://www.twitch.tv/hector_pulido_](https://www.twitch.tv/hector_pulido_)  
 
 ## Licence 
 This repository uses [Twitchio](https://github.com/TwitchIO/TwitchIO) and [Hugginface](https://github.com/huggingface/transformers) everything else is under MIT license
