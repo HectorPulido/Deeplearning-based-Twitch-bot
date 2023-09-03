@@ -9,6 +9,8 @@ class TalkToChatbot:
         self.emotes = emotes
 
     async def __call__(self, message, bot):
+        if message.author is None:
+            return
         if f"@{bot.bot_nick.lower()}" not in message.content.lower() + " EOL":
             return
 
@@ -19,7 +21,7 @@ class TalkToChatbot:
 
         response = self.process_response(message_replaced)
 
-        if self.emotes is not None and type(response) is tuple:
+        if self.emotes is not None and isinstance(response, tuple):
             text, sentiment = response
             response = text + " " + self.get_emote(sentiment)
 

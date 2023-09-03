@@ -27,6 +27,9 @@ duel_start_message = "Empieza la pelea entre @{duelist_1} y @{duelist_2}"
 
 
 async def duel(message, bot):
+    if message.author is None:
+        return
+
     duelist_1 = message.author.name
     duelist_2 = message.content.strip().split(" ")[0].replace("@", "")
 

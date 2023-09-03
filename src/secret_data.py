@@ -1,6 +1,0 @@
-TMI_TOKEN = ""
-CLIENT_ID = ""
-BOT_NICK = "pequeninancientbot"
-BOT_PREFIX = "!"
-CHANNEL = "#hector_pulido_"
-CLIENT_SECRET = ""

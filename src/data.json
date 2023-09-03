@@ -1,0 +1,82 @@
+{
+    "bot": {
+        "model": "llama-2-7b-chat.ggmlv3.q4_K_M.bin",
+        "prompt": "prompts/prompt_base.txt",
+        "sentiment_analisis": true,
+        "max_tokens": 200,
+        "temperature": 0.7
+    },
+    "translation": {
+        "translation_artifacts_english": {
+            "Disagreement": "Discord"
+        },
+        "translation_artifacts_spanish": {
+            "pequenina": "Pequeñin",
+            "osito de peluche": "Oso Teddy",
+            "profesor": "Maestro"
+        }
+    },
+    "word_blacklist": [
+        "nazi",
+        "homosex",
+        "judio",
+        "comunis",
+        "porn",
+        "pedofi",
+        "hitler",
+        "guerra",
+        "antisem"
+    ],
+    "blacklist_message": "No puedo responder a eso",
+    "emotes": {
+        "positive": ["❤", "😂", "😁", "😋", "TakeNRG", "VoHiYo", "BloodTrail", "TehePelo"],
+        "negative": [
+            "😣",
+            "😥",
+            "🙁",
+            "😰",
+            "WutFace",
+            "TheThing",
+            "NotLikeThis",
+            "BibleThump"
+        ],
+        "neutral": ["", "", "", "PowerUpL DxCat PowerUpR", "Squid1 Squid3 Squid2 Squid4 "]
+    }, 
+    "custom_commands": {
+        "hola": "Hola @{user}",
+        "bendicion": "Yo, @{bot} te bendigo @{user}",
+        "pickoneuser": "Le elegide es @{random_user}",
+        "discord": "Te invito a nuestro grupo de discord, https://discord.gg/ZsUpJJc, siempre hablamos de cosas interesantes y momazos",
+        "youtube": "¡Suscribete a nuestro canal de youtube para enterarte de lo ultimo de desarrollo de videojuegos e inteligencia artificial! https://www.youtube.com/@Hector.Pulido",
+        "github": "¿Quieres saber como estoy hecho? entra a el github: https://github.com/HectorPulido",
+        "twitter": "Sigue a Hector en Twitter, dice puras pendejadas, pero pendejadas interesantes https://twitter.com/Hector_Pulido_"
+    },
+    "time_to_spam": 600,
+    "spam_message": [
+        "¡Suscribete a nuestro canal de youtube para enterarte de lo ultimo de desarrollo de videojuegos e inteligencia artificial! https://www.youtube.com/@Hector.Pulido",
+        "Te invito a nuestro grupo de discord, https://discord.gg/ZsUpJJc, siempre hablamos de cosas interesantes",
+        "Sigue a Hector en Twitter, dice puras pendejadas, pero pendejadas interesantes https://twitter.com/Hector_Pulido_",
+        "¿Quieres saber como estoy hecho? entra a el github: https://github.com/HectorPulido",
+        "Recuerda que si le picas al follow twitch te avisará de los proximos directos",
+        "Habla conmigo tageandome, no seas timido, pregunta lo que quieras",
+        "Recuerda que si tienes Twitch prime, la suscripcion es gratis <3"
+    ],
+    "default_messages": {
+        "on_active": "Circulo de invocacion completo, Fui invocado del mas allá!",
+        "on_deactivate": "Bot desactivado",
+        "on_sub": "Muchisimas gracias @{} por ese sub, bienvenid@ a la familia <3",
+        "on_resub": "Muchisimas gracias @{} por esa re sub, ¡{} meses WOW! que alegria tenerte de nuevo por aqui <3",
+        "on_raid": "Muchas gracias por ese raid @{}, bienvenidos todos <3",
+        "on_subgift": "Muchisimas gracias @{} por regalar esas subs <3"
+    },
+    "on_bits": "Muchisimas gracias @{user} por esos {bits} bits",
+    "custom_rewards": {
+        "fdfe4eae-bee4-48f2-ad6b-c8b0532d07e0": "@{name} quiere que tomes awa de uwu",
+        "48b7a08e-72ae-4bb3-b86c-f80396146338": "@{name} merece ser Vip!"    
+    },
+    "text_to_speech": {
+        "template": "{user} Dice: {text}",
+        "rate": 150
+    },
+    "bot_prefix": "!"
+}

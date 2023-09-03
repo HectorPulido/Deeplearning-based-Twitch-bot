@@ -3,6 +3,8 @@ on_wet = "@{} le ha echado awa a @{}"
 
 
 async def wet(message, bot):
+    if message.author is None:
+        return
     author = message.author.name
     target = message.content.strip().split(" ")[0].replace("@", "")
 

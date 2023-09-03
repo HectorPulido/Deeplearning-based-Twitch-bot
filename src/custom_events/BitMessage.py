@@ -3,13 +3,18 @@ class BitMessage:
         self.tts = tts
         self.on_bits_message = on_bits_message
 
-    async def __call__(self, message, bot):
-        bits = message.tags.get("bits", None)
-
-        if bits == None:
+    async def __call__(self, message, _):
+        if message.author is None:
             return
 
-        response = self.on_bits_message.format(message.author.name, bits)
+        bits = message.tags.get("bits", None)
+
+        if bits is None:
+            return
+
+        response = self.on_bits_message
+        response = response.format("{user}", message.author.name)
+        response = response.format("{bits}", bits)
 
         if self.tts is not None:
             self.tts.say(response)

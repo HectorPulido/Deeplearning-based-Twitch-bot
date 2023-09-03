@@ -2,6 +2,9 @@ welcome_message = "Bienvenid@ al stream, ¡ @{} !"
 
 
 async def welcome(message, bot):
+    if message.author is None:
+        return
+
     if message.author.name in bot.viewer_list:
         return
 

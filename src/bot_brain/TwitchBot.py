@@ -1,8 +1,7 @@
-from twitchio.ext import commands
-from twitchio.webhook import UserFollows
-import asyncio
-import time
 import random
+import logging
+import asyncio
+from twitchio.ext import commands
 
 
 class TwitchBot(commands.Bot):
@@ -52,16 +51,14 @@ class TwitchBot(commands.Bot):
         self.spam_message = spam_message
         self.default_messages = default_messages
         self.text_to_speech = text_to_speech
+        self.channel_instance = None
 
         self.custom_rewards = custom_rewards
         self.custom_events = custom_events
         self.custom_commands = custom_commands
 
         super().__init__(
-            client_secret=self.client_secret,
-            irc_token=self.tmi_token,
-            client_id=self.client_id,
-            nick=self.bot_nick,
+            token=self.tmi_token,
             prefix=self.bot_prefix,
             initial_channels=[self.channel],
         )
@@ -69,15 +66,7 @@ class TwitchBot(commands.Bot):
     async def event_ready(self):
         """On event ready"""
 
-        print("Everything ready")
-        self.channel_user = await self.get_users(
-            self.channel.replace("#", "").lower().strip()
-        )
-        self.bot_user = await self.get_users(self.bot_nick.lower().strip())
-
-        self.channel_user = self.channel_user[0]
-        self.bot_user = self.bot_user[0]
-
+        logging.debug("Everything ready")
         # run spam loop
         await self.spam_messages(self.time_to_spam)
 
@@ -93,11 +82,14 @@ class TwitchBot(commands.Bot):
         if not self.active:
             return
 
+        if message.author is None:
+            return
+
         # make sure the bot ignores itself
         if message.author.name.lower() == self.bot_nick.lower():
             return
 
-        print(message.raw_data)
+        logging.debug(message.raw_data)
 
         for event in self.custom_events:
             await event(message, self)
@@ -112,7 +104,10 @@ class TwitchBot(commands.Bot):
             active (bool): if the bot is not active, it'll no talk
         """
 
-        if message.author.name.lower() not in self.channel.lower():
+        if (
+            message.author is not None
+            and message.author.name.lower() not in self.channel.lower()
+        ):
             return
 
         if "deactivatebot" in message.content + " EOL":
@@ -120,6 +115,7 @@ class TwitchBot(commands.Bot):
             await message.channel.send(self.default_messages["on_deactivate"])
         elif "activatebot" in message.content + " EOL":
             self.active = True
+            self.channel_instance = message.channel
             await message.channel.send(self.default_messages["on_active"])
 
     async def spam_messages(self, time_to_spam):
@@ -134,9 +130,9 @@ class TwitchBot(commands.Bot):
 
             if self.active:
                 chosen_item = random.choice(self.spam_message)
-                await self._ws.send_privmsg(self.channel, chosen_item)
+                await self.channel_instance.send(chosen_item)
 
-    async def event_raw_usernotice(self, channel, tags):
+    async def event_raw_usernotice(self, _, tags):
         """Responds to subs, resubs, raids and gifted subs"""
 
         if not self.active:
@@ -159,14 +155,25 @@ class TwitchBot(commands.Bot):
         if self.text_to_speech is not None:
             self.text_to_speech.say(message)
 
-        await self._ws.send_privmsg(self.channel, message)
+        await self.channel_instance.send(message)
+
+    def _format(self, text, message):
+        info = {
+            "{name}": message.author.name,
+            "{random_user}": random.choice(self.viewer_list),
+            "{bot}": self.bot_nick,
+        }
+        for key, value in info.items():
+            text = text.replace(key, value)
+
+        return text
 
     async def handle_custom_commands(self, message):
         text = message.content.lower()
         for key, command in self.custom_commands.items():
             if text.startswith(self.bot_prefix + key.lower()):
-                if type(command) is str:
-                    return await message.channel.send(command)
+                if isinstance(command, str):
+                    return await message.channel.send(self._format(command, message))
                 return await command(message, self)
 
     async def handle_custom_rewards(self, message):
@@ -178,13 +185,12 @@ class TwitchBot(commands.Bot):
 
         reward_function = self.custom_rewards[reward]
 
-        if type(reward_function) == str:
-            text = reward_function.format(name=message.author.name)
-            await self._ws.send_privmsg(self.channel, text)
+        if isinstance(reward_function, str):
+            text = self._format(reward_function, message)
+            await self.channel_instance.send(text)
             return
 
         await reward_function(message, self)
 
-    async def event_command_error(self, ctx, e):
+    async def event_command_error(self, _, __):
         """ignore errors"""
-        pass
