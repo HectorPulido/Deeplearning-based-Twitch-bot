@@ -66,7 +66,7 @@ if __name__ == "__main__":
         bot_prefix = data["bot_prefix"]
 
         logging.debug("Starting bot")
-        TIME_TO_SPAM = 60 * 10
+        TIME_TO_SPAM = data["time_to_spam"]
         bot = TwitchBot(
             CLIENT_SECRET,
             TMI_TOKEN,

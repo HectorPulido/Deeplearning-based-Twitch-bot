@@ -115,6 +115,7 @@ class TwitchBot(commands.Bot):
             await message.channel.send(self.default_messages["on_deactivate"])
         elif "activatebot" in message.content + " EOL":
             self.active = True
+            self.viewer_list = []
             self.channel_instance = message.channel
             await message.channel.send(self.default_messages["on_active"])
 
@@ -192,5 +193,6 @@ class TwitchBot(commands.Bot):
 
         await reward_function(message, self)
 
-    async def event_command_error(self, _, __):
+    async def event_command_error(self, _, error):
         """ignore errors"""
+        logging.error(error)
