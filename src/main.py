@@ -43,26 +43,28 @@ if __name__ == "__main__":
                 translator = Translator(data["translation"])
             chatbot = ChatbotBrain(data["bot"], translator)
 
-        text_to_speech = TextToSpeech(data["text_to_speech"])
-
         talk_to_chatbot = TalkToChatbot(
             chatbot, data["word_blacklist"], data["blacklist_message"], data["emotes"]
         )
-        bit_message = BitMessage(data["on_bits"], text_to_speech)
 
-        custom_events = [bit_message, welcome, links, talk_to_chatbot]
+        custom_events = [welcome, links, talk_to_chatbot]
 
         custom_commands = data["custom_commands"]
         spam_message = data["spam_message"]
         default_messages = data["default_messages"]
 
         custom_rewards = data["custom_rewards"]
-        custom_rewards["e2665151-3aef-4add-8292-1223d27fb671"] = text_to_speech
         custom_rewards["a48e6dbc-bdd6-4492-b460-027642f48c02"] = wet
         custom_rewards["fbfa5734-9d04-482d-8d3d-177b4e574861"] = duel
 
-        time_to_spam = data["time_to_spam"]
+        if "text_to_speech" in data:
+            text_to_speech = TextToSpeech(data["text_to_speech"])
+            bit_message = BitMessage(data["on_bits"], text_to_speech)
+            custom_events.append(bit_message)
+            custom_rewards["e2665151-3aef-4add-8292-1223d27fb671"] = text_to_speech
 
+
+        time_to_spam = data["time_to_spam"]
         bot_prefix = data["bot_prefix"]
 
         logging.debug("Starting bot")
