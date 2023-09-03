@@ -21,7 +21,7 @@ This is a twitch chatbot made with Twitchio for the twitch connection and Transf
 * Context optimization
 
 ## How to use
-1. Configure the file secret.py like this
+1. Configure the file .env like this, you can use the .env.test
 ```
 TMI_TOKEN = "oauth:***********"
 CLIENT_ID = "***********"
@@ -33,7 +33,7 @@ CLIENT_SECRET = "***********"
 2. You can get the TMI_TOKEN from https://twitchapps.com/tmi/
 3. You can get your CLIENT_ID and CLIENT_SECRET from https://dev.twitch.tv/dashboard/apps/create
 4. Set the BOT_NICK and CHANNEL
-5. Configure the "main.py" file to your needs
+5. Configure the "data.json" and the "main.py" file to your needs
 5. Docker ready code
 ```
 >> mv <src_folder>
@@ -103,10 +103,20 @@ I have a lot of fun projects, check this:
 - https://github.com/HectorPulido/Simple-php-blog
 - https://github.com/HectorPulido/Decentralized-Twitter-with-blockchain-as-base
 
-### You also can follow me in social networks
-- Twitter: [https://twitter.com/Hector_Pulido_](https://twitter.com/Hector_Pulido_)  
-- Youtube: http://youtube.com/c/hectorandrespulidopalmar
-- Twitch: [https://www.twitch.tv/hector_pulido_](https://www.twitch.tv/hector_pulido_)  
-
 ## Licence 
 This repository uses [Twitchio](https://github.com/TwitchIO/TwitchIO) and [Hugginface](https://github.com/huggingface/transformers) everything else is under MIT license
+
+<div align="center">
+<h3 align="center">Let's connect 😋</h3>
+</div>
+<p align="center">
+<a href="https://www.linkedin.com/in/hector-pulido-17547369/" target="blank">
+<img align="center" width="30px" alt="Hector's LinkedIn" src="https://www.vectorlogo.zone/logos/linkedin/linkedin-icon.svg"/></a> &nbsp; &nbsp;
+<a href="https://twitter.com/Hector_Pulido_" target="blank">
+<img align="center" width="30px" alt="Hector's Twitter" src="https://www.vectorlogo.zone/logos/twitter/twitter-official.svg"/></a> &nbsp; &nbsp;
+<a href="https://www.twitch.tv/hector_pulido_" target="blank">
+<img align="center" width="30px" alt="Hector's Twitch" src="https://www.vectorlogo.zone/logos/twitch/twitch-icon.svg"/></a> &nbsp; &nbsp;
+<a href="https://www.youtube.com/channel/UCS_iMeH0P0nsIDPvBaJckOw" target="blank">
+<img align="center" width="30px" alt="Hector's Youtube" src="https://www.vectorlogo.zone/logos/youtube/youtube-icon.svg"/></a> &nbsp; &nbsp;
+
+</p>
