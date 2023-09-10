@@ -13,8 +13,9 @@ class BitMessage:
             return
 
         response = self.on_bits_message
-        response = response.format("{user}", message.author.name)
-        response = response.format("{bits}", bits)
+
+        response = response.replace("{user}", message.author.name)
+        response = response.replace("{bits}", bits)
 
         if self.tts is not None:
             self.tts.say(response)
