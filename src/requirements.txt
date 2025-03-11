@@ -6,7 +6,7 @@ pyaudio==0.2.13
 websockets==11.0.3
 gpt4all==0.1.7
 python-dotenv==1.0.0
-torch==2.0.1
+torch==2.2.0
 torchvision==0.15.2
 torchaudio==2.0.2
 sacremoses==0.0.53
